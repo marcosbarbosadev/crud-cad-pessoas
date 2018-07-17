@@ -1,7 +1,10 @@
 package br.com.mbarbosa.beans;
 
-import java.util.ArrayList;
+import java.text.Collator;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 
@@ -12,7 +15,7 @@ import br.com.mbarbosa.util.FacesMessages;
 @ManagedBean
 public class PessoasMB {
 
-	private static List<Pessoa> pessoas = new ArrayList<>();;
+	private static Map<Integer, Pessoa> pessoas = new HashMap<>();;
 	
 	private Pessoa pessoaEdicao = new Pessoa();
 	
@@ -35,11 +38,11 @@ public class PessoasMB {
 		
 	}
 
-	public List<Pessoa> getPessoas() {
-		return pessoas;
+	public Collection<Pessoa> getPessoas() {
+		return pessoas.values();
 	}
 
-	public void setPessoas(List<Pessoa> pessoas) {
+	public void setPessoas(Map<Integer, Pessoa> pessoas) {
 		this.pessoas = pessoas;
 	}
 	public Pessoa getPessoaEdicao() {
@@ -50,17 +53,28 @@ public class PessoasMB {
 		this.pessoaEdicao = pessoaEdicao;
 	}
 	
-	public void adicionar() {
-		pessoas.add(pessoaEdicao);
-		this.pessoaEdicao = new Pessoa();
+	public void salvar() {
+		
+		String mensagemInfo = null;
+		
+		if(pessoas.containsKey(pessoaEdicao.getId())) {
+			mensagemInfo = "Pessoa atualizada com sucesso!";
+		} else {
+			mensagemInfo = "Pessoa cadastrada com sucesso!";
+		}
+		
+		pessoas.put(pessoaEdicao.getId(), pessoaEdicao);
+		pessoaEdicao = new Pessoa();
+		FacesMessages.info(mensagemInfo);
+		
 	}
 	
-	public void editar() {
-		pessoaEdicao.setNome("Teste editar");
+	public void editar(Pessoa p) {
+		pessoaEdicao = p;
 	}
 	
 	public void remover(Pessoa p) {
-		pessoas.remove(p);
+		pessoas.remove(p.getId());
 		FacesMessages.info("Registro removido com sucesso!");
 	}
 	

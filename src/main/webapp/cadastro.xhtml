@@ -33,7 +33,7 @@
 			<p:outputLabel value="Celular:" for="telContato" />
 			<p:inputMask id="telContato" name="telefoneContato" mask="(99) 99999-9999" value="#{pessoasMB.pessoaEdicao.telefoneContato}" />
 			
-			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.adicionar()}" update="listagem-pessoas, frm-cad" />
+			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.salvar()}" update="listagem-pessoas, frm-cad" />
 			
 		</p:panelGrid>
 		
@@ -61,7 +61,7 @@
 		
 		<p:column headerText="Ações">
 			<h:form>
-				<p:commandButton icon="ui-icon-pencil" action="#{pessoasMB.editar()}" update="frm-cad" />
+				<p:commandButton icon="ui-icon-pencil" action="#{pessoasMB.editar(p)}" update="frm-cad" />
 				<p:commandButton icon="ui-icon-trash" action="#{pessoasMB.remover(p)}" update="listagem-pessoas"/>
 			</h:form>
 		</p:column>
