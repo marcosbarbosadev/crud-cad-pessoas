@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 
+import br.com.mbarbosa.model.EstadoCivil;
 import br.com.mbarbosa.model.Pessoa;
+import br.com.mbarbosa.util.FacesMessages;
 
 @ManagedBean
 public class PessoasMB {
@@ -51,6 +53,19 @@ public class PessoasMB {
 	public void adicionar() {
 		pessoas.add(pessoaEdicao);
 		this.pessoaEdicao = new Pessoa();
+	}
+	
+	public void editar() {
+		pessoaEdicao.setNome("Teste editar");
+	}
+	
+	public void remover(Pessoa p) {
+		pessoas.remove(p);
+		FacesMessages.info("Registro removido com sucesso!");
+	}
+	
+	public EstadoCivil[] getEstadosCivis() {
+		return EstadoCivil.values();
 	}
 	
 }

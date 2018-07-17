@@ -13,7 +13,7 @@
 <h:body>
 
 	<h:form style="margin-bottom: 20px;" id="frm-cad">
-		<p:messages id="messages" />
+		<p:messages id="messages" autoUpdate="true" closable="true" />
 		
 		<p:panelGrid columns="2" style="width: 80%;">
 			<p:outputLabel value="Nome:" for="nome" />
@@ -25,21 +25,25 @@
 			<p:outputLabel value="Estado Civil:" for="estadoCivil" />
 			<p:selectOneMenu id="estadoCivil" name="estadoCivil" value="#{pessoasMB.pessoaEdicao.estadoCivil}">
 				<f:selectItem itemLabel="Selecione" />
-				<f:selectItem itemLabel="Casado" />
-				<f:selectItem itemLabel="Solteiro" />
-			</p:selectOneMenu>
+				<f:selectItems value="#{pessoasMB.estadosCivis}" var="ec"
+					itemLabel="#{ec.descricao}" itemValue="#{ec}" />
+			</p:selectOneMenu>			
+			
 
 			<p:outputLabel value="Celular:" for="telContato" />
 			<p:inputMask id="telContato" name="telefoneContato" mask="(99) 99999-9999" value="#{pessoasMB.pessoaEdicao.telefoneContato}" />
 			
-			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.adicionar}" update="listagem-pessoas, frm-cad" />
+			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.adicionar()}" update="listagem-pessoas, frm-cad" />
 			
 		</p:panelGrid>
 		
 	</h:form>
 
-	<p:dataTable var="p" value="#{pessoasMB.pessoas}" id="listagem-pessoas">
-		<p:column headerText="Nome">
+	<p:dataTable var="p" value="#{pessoasMB.pessoas}" id="listagem-pessoas" 
+		emptyMessage="Nenhuma pessoa cadastrada." rows="10" 
+		paginator="true" paginatorPosition="bottom">
+		
+		<p:column headerText="Nome" sortBy="#{p.nome}">
 			<h:outputText value="#{p.nome}" />
 		</p:column>
 
@@ -48,11 +52,18 @@
 		</p:column>
 
 		<p:column headerText="Estado Civil">
-			<h:outputText value="#{p.estadoCivil}" />
+			<h:outputText value="#{p.estadoCivil.descricao}" />
 		</p:column>
 
 		<p:column headerText="Tel. Contato">
 			<h:outputText value="#{p.telefoneContato}" />
+		</p:column>
+		
+		<p:column headerText="Ações">
+			<h:form>
+				<p:commandButton icon="ui-icon-pencil" action="#{pessoasMB.editar()}" update="frm-cad" />
+				<p:commandButton icon="ui-icon-trash" action="#{pessoasMB.remover(p)}" update="listagem-pessoas"/>
+			</h:form>
 		</p:column>
 	</p:dataTable>
 
