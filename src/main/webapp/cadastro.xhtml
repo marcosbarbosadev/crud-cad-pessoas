@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta charset="UTF-8" />
+	<title>Cadastro de Pessoas</title>
+</h:head>
+
+
+<h:body>
+
+	<h:form style="margin-bottom: 20px;" id="frm-cad">
+		<p:messages id="messages" />
+		
+		<p:panelGrid columns="2" style="width: 80%;">
+			<p:outputLabel value="Nome:" for="nome" />
+			<p:inputText id="nome" name="nome" style="width: 99%;" value="#{pessoasMB.pessoaEdicao.nome}" />
+
+			<p:outputLabel value="CPF:" for="cpf" />
+			<p:inputMask id="cpf" name="cpf" mask="99.999.999/9999-99" value="#{pessoasMB.pessoaEdicao.cpf}" />
+
+			<p:outputLabel value="Estado Civil:" for="estadoCivil" />
+			<p:selectOneMenu id="estadoCivil" name="estadoCivil" value="#{pessoasMB.pessoaEdicao.estadoCivil}">
+				<f:selectItem itemLabel="Selecione" />
+				<f:selectItem itemLabel="Casado" />
+				<f:selectItem itemLabel="Solteiro" />
+			</p:selectOneMenu>
+
+			<p:outputLabel value="Celular:" for="telContato" />
+			<p:inputMask id="telContato" name="telefoneContato" mask="(99) 99999-9999" value="#{pessoasMB.pessoaEdicao.telefoneContato}" />
+			
+			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.adicionar}" update="listagem-pessoas, frm-cad" />
+			
+		</p:panelGrid>
+		
+	</h:form>
+
+	<p:dataTable var="p" value="#{pessoasMB.pessoas}" id="listagem-pessoas">
+		<p:column headerText="Nome">
+			<h:outputText value="#{p.nome}" />
+		</p:column>
+
+		<p:column headerText="CPF">
+			<h:outputText value="#{p.cpf}" />
+		</p:column>
+
+		<p:column headerText="Estado Civil">
+			<h:outputText value="#{p.estadoCivil}" />
+		</p:column>
+
+		<p:column headerText="Tel. Contato">
+			<h:outputText value="#{p.telefoneContato}" />
+		</p:column>
+	</p:dataTable>
+
+</h:body>
+
+
+</html>
