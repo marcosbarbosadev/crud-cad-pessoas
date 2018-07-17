@@ -1,9 +1,6 @@
 package br.com.mbarbosa.beans;
 
-import java.text.Collator;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -11,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import br.com.mbarbosa.model.EstadoCivil;
 import br.com.mbarbosa.model.Pessoa;
 import br.com.mbarbosa.util.FacesMessages;
+import javassist.NotFoundException;
 
 @ManagedBean
 public class PessoasMB {
@@ -19,29 +17,11 @@ public class PessoasMB {
 	
 	private Pessoa pessoaEdicao = new Pessoa();
 	
-	public PessoasMB() {
-		
-//		Pessoa p1 = new Pessoa();
-//		p1.setNome("Marcos Barbosa");
-//		p1.setCpf("123456789");
-//		p1.setEstadoCivil("Casado");
-//		p1.setTelefoneContato("12341561");
-//		
-//		Pessoa p2 = new Pessoa();
-//		p2.setNome("Fulano Silva");
-//		p2.setCpf("123456789");
-//		p2.setEstadoCivil("Casado");
-//		p2.setTelefoneContato("12341561");
-//
-//		pessoas.add(p1);
-//		pessoas.add(p2);
-		
+	public Map<Integer, Pessoa> getPessoas() {
+		return pessoas;
 	}
 
-	public Collection<Pessoa> getPessoas() {
-		return pessoas.values();
-	}
-
+	
 	public void setPessoas(Map<Integer, Pessoa> pessoas) {
 		this.pessoas = pessoas;
 	}
@@ -57,10 +37,11 @@ public class PessoasMB {
 		
 		String mensagemInfo = null;
 		
-		if(pessoas.containsKey(pessoaEdicao.getId())) {
-			mensagemInfo = "Pessoa atualizada com sucesso!";
+		if(pessoaEdicao.getId() != null) {
+			mensagemInfo = "Pessoa de nome " + pessoaEdicao.getNome() + " atualizada com sucesso!";
 		} else {
-			mensagemInfo = "Pessoa cadastrada com sucesso!";
+			pessoaEdicao.setId(pessoas.size() + 1);
+			mensagemInfo = "Pessoa de nome " + pessoaEdicao.getNome() + " cadastrada com sucesso!";
 		}
 		
 		pessoas.put(pessoaEdicao.getId(), pessoaEdicao);
@@ -69,13 +50,36 @@ public class PessoasMB {
 		
 	}
 	
-	public void editar(Pessoa p) {
-		pessoaEdicao = p;
+	public void editar(int id) {
+		
+		try {
+			
+			if(!pessoas.containsKey(id)) {
+				throw new NotFoundException("Não existe pessoa com código " + id + " no sistema!");
+			}
+
+			pessoaEdicao = pessoas.get(id);
+		
+		} catch(NotFoundException e) {
+			FacesMessages.error(e.getMessage());
+		}
+		
 	}
 	
 	public void remover(Pessoa p) {
-		pessoas.remove(p.getId());
-		FacesMessages.info("Registro removido com sucesso!");
+
+		try {
+			if(!pessoas.containsKey(p.getId())) {
+				throw new NotFoundException("Pessoa de código " + p.getId() + " não está cadastrada no sistema");
+			}
+
+			pessoas.remove(p.getId());
+			FacesMessages.info("Pessa de nome " + p.getNome() + " removida com sucesso!");
+		
+		} catch(NotFoundException e) {
+			FacesMessages.error(e.getMessage() + "!");
+		}
+		
 	}
 	
 	public EstadoCivil[] getEstadosCivis() {

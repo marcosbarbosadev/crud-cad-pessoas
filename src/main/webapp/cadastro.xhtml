@@ -15,6 +15,8 @@
 	<h:form style="margin-bottom: 20px;" id="frm-cad">
 		<p:messages id="messages" autoUpdate="true" closable="true" />
 		
+		<h:inputHidden value="#{pessoasMB.pessoaEdicao.id}" />
+		
 		<p:panelGrid columns="2" style="width: 80%;">
 			<p:outputLabel value="Nome:" for="nome" />
 			<p:inputText id="nome" name="nome" style="width: 99%;" value="#{pessoasMB.pessoaEdicao.nome}" />
@@ -33,17 +35,18 @@
 			<p:outputLabel value="Celular:" for="telContato" />
 			<p:inputMask id="telContato" name="telefoneContato" mask="(99) 99999-9999" value="#{pessoasMB.pessoaEdicao.telefoneContato}" />
 			
-			<p:commandButton value="Cadastrar" colspan="2" action="#{pessoasMB.salvar()}" update="listagem-pessoas, frm-cad" />
+			<p:commandButton value="Salvar" colspan="2" action="#{pessoasMB.salvar()}" update="listagem-pessoas, frm-cad" />
+			<h:outputText value="" />
 			
 		</p:panelGrid>
 		
 	</h:form>
 
-	<p:dataTable var="p" value="#{pessoasMB.pessoas}" id="listagem-pessoas" 
+	<p:dataTable var="p" value="#{pessoasMB.pessoas.values()}" id="listagem-pessoas" 
 		emptyMessage="Nenhuma pessoa cadastrada." rows="10" 
 		paginator="true" paginatorPosition="bottom">
 		
-		<p:column headerText="Nome" sortBy="#{p.nome}">
+		<p:column headerText="Nome">
 			<h:outputText value="#{p.nome}" />
 		</p:column>
 
@@ -61,7 +64,7 @@
 		
 		<p:column headerText="Ações">
 			<h:form>
-				<p:commandButton icon="ui-icon-pencil" action="#{pessoasMB.editar(p)}" update="frm-cad" />
+				<p:commandButton icon="ui-icon-pencil" action="#{pessoasMB.editar(p.id)}" update="frm-cad" />
 				<p:commandButton icon="ui-icon-trash" action="#{pessoasMB.remover(p)}" update="listagem-pessoas"/>
 			</h:form>
 		</p:column>
